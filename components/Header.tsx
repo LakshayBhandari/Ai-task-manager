@@ -1,10 +1,16 @@
 "use client";
+import { useBoardStore } from "@/store/BoardStore";
 import { MagnifyingGlassIcon, UserCircleIcon } from "@heroicons/react/20/solid";
 import Image from "next/image";
 import React from "react";
 import Avatar from "react-avatar";
 
 const Header = () => {
+
+  const [searchString,setSearchString] = useBoardStore((state)=>[
+    state.searchString,
+    state.setSearchString,
+  ])
   return (
     <header>
         
@@ -22,7 +28,7 @@ const Header = () => {
           {/*Search Box */}
           <form className="flex items-center space-x-5 bg-white  rounded-md  p-2 shadow-md flex-1 md:flex-initial">
             <MagnifyingGlassIcon className="h-6 w-6 text-gray-400" />
-            <input type="text" className="flex-1 outline-none p-2" />
+            <input value={searchString} onChange={(e) => setSearchString(e.target.value)} type="text" className="flex-1 outline-none p-2" />
             <button type="submit" hidden>
               Search
             </button>

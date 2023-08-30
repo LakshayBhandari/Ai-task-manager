@@ -6,10 +6,11 @@ import Columns from "./Columns";
 import { Column } from "@/typings";
 
 const Board = () => {
-  const [board, getBoard,setBoardState] = useBoardStore((state) => [
+  const [board, getBoard,setBoardState,updateTodoInDb] = useBoardStore((state) => [
     state.board,
     state.getBoard,
-    state.setBoardState
+    state.setBoardState,
+    state.updateTodoInDb
   ]);
   useEffect(() => {
     getBoard();
@@ -84,6 +85,8 @@ const Board = () => {
     
 
     // Update IN DB
+    updateTodoInDb(todoMoved,finishCol.id)
+
     setBoardState({...board,columns:newColumns});
    }
 
