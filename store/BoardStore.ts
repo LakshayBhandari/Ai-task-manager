@@ -1,8 +1,10 @@
 import { databases, storage } from "@/appwrite";
 import { getTodosGroupedByColumn } from "@/lib/GetTodosGroupedByColumn";
-import { Board, Column, Todo, TypedColumn } from "@/typings";
-import { Permission, Role } from "appwrite";
+import uploadImage from "@/lib/uploadImage";
+import { Board, Column, Image, Todo, TypedColumn } from "@/typings";
+import { ID, Permission, Role } from "appwrite";
 import { write } from "fs";
+import { todo } from "node:test";
 import { create } from "zustand";
 
 interface BoardState {
@@ -16,9 +18,13 @@ interface BoardState {
     newTaskType:TypedColumn;
     setNewTaskType:(columnId:TypedColumn)=>void;
 
+    image:File|null;
+    setImage:(image:File|null)=>void;
+
     searchString:string;
     setSearchString : (searchString:string) => void;
 
+    addTask:(todo:string,columnId:TypedColumn,image?:File|null)=>void;
     deleteTask:(taskIndex:number,todoId:Todo,id:TypedColumn) => void;
 }
 export const useBoardStore=create<BoardState>((set,get)=>({
@@ -31,6 +37,8 @@ export const useBoardStore=create<BoardState>((set,get)=>({
     setSearchString:(searchString) =>set({searchString}),
     newTaskType:"todo",
 
+   image:null,
+   setImage:(image:File|null)=>set({image}),
 
     getBoard:async()=>{
       const board=await getTodosGroupedByColumn();
@@ -71,5 +79,41 @@ export const useBoardStore=create<BoardState>((set,get)=>({
         process.env.NEXT_PUBLIC_COLLECTION_ID!,
         todo.$id
       )
+    },
+
+    addTask:async(todo:string,columnId:TypedColumn,image?:File|null)=>{
+      let file: Image | undefined;
+
+      if(image){
+      const fileUploaded = await uploadImage(image);
+      if(fileUploaded){
+        file={
+          bucketId:fileUploaded.bucketId,
+          fileId:fileUploaded.$id,
+        };
+      }
+      } 
+
+       const { $id } = await databases.createDocument(
+        process.env.NEXT_PUBLIC_DATABASE_ID!,
+        process.env.NEXT_PUBLIC_COLLECTION_ID!,
+
+        ID.unique(),
+        {
+          title:todo,
+          status:columnId,
+          //include image if it exists
+          ...(file && {image:JSON.stringify(file)}),
+        }
+      );
+
+      set({newTaskInput:""});
+
+      set((state)=>{
+        const newColumns = new Map(state.board.columns)
+      })
+
     }
+
+
 }))
