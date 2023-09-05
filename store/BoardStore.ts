@@ -111,9 +111,36 @@ export const useBoardStore=create<BoardState>((set,get)=>({
 
       set((state)=>{
         const newColumns = new Map(state.board.columns)
+
+        const newtodo:Todo={
+         $id,
+         $createdAt:todo,
+         title:todo,
+         status:columnId,
+         //include image if exists
+         ...(file && { image :file}),
+        };
+
+        const column = newColumns.get(columnId)
+
+        if(!column){
+          newColumns.set(columnId,{
+            id:columnId,
+            todos:[newtodo]
+          });
+        }
+        else{
+            newColumns.get(columnId)?.todos.push(newtodo)
+        }
+
+        return{
+          board:{
+            columns:newColumns,
+          }
+        }
       })
-
+        
     }
-
+     
 
 }))

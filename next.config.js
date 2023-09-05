@@ -3,6 +3,6 @@ const nextConfig = {}
 
 module.exports = {
     images: {
-        domains: ['media.giphy.com', 'localhost', '...'], // add other domains if needed
+        domains: ['media.giphy.com', 'localhost', 'cloud.appwrite.io'], // add other domains if needed
       },
   }
