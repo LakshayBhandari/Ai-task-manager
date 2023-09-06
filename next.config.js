@@ -1,8 +1,8 @@
 /** @type {import('next').NextConfig} */
-const nextConfig = {}
-
-module.exports = {
+const nextConfig = {
     images: {
-        domains: ['media.giphy.com', 'localhost', 'cloud.appwrite.io'], // add other domains if needed
-      },
-  }
+        domains: ['links.papareact.com', 'cloud.appwrite.io'],
+    },
+}
+
+module.exports = nextConfig

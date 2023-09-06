@@ -1,5 +1,5 @@
-import { Board } from "@/typings";
-import formatTodosForAI from "./formatTodosForAI";
+import formatTodosForAI from "./formatTodoForAI";
+
 
 const fetchSuggestion = async (board:Board) =>{
   
